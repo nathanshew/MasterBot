@@ -10,12 +10,12 @@ class Checker:
         self.chat_id = chat_id
         self.thread_id = thread_id
 
-    async def run(self):
+    async def run(self, force=False):
         data = get_rows(os.getenv('ATTENDANCE_SHEET_ID'), os.getenv('ATTENDANCE_SHEET_NAME'))
         db = get_rows(os.getenv('OPEN_JIO_DATABASE_SHEET_ID'), os.getenv('OPEN_JIO_DATABASE_SHEET_NAME'), 'A:O') \
             if os.getenv('OPEN_JIO_DATABASE_SHEET_ID') else []
 
-        col_indices, counts = self._get_columns(data)
+        col_indices, counts = self._get_columns(data, force=force)
         if not col_indices:
             return
 
@@ -33,7 +33,7 @@ class Checker:
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 
-    def _get_columns(self, data):
+    def _get_columns(self, data, force=False):
         """Return (col_indices, counts) for the latest 3 past session dates, or ([], {}) if today isn't a session day."""
         date_row = data[4] if len(data) > 4 else []
         today = datetime.now().date()
@@ -46,7 +46,7 @@ class Checker:
         cols.sort(key=lambda x: x[1], reverse=True)
         cols = cols[:3]
 
-        if not cols or today not in {c[1] for c in cols}:
+        if not cols or (not force and today not in {c[1] for c in cols}):
             return [], {}
 
         col_indices = [(c[0], c[2]) for c in cols]

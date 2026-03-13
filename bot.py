@@ -1,9 +1,8 @@
 import os
 from dotenv import load_dotenv
-from telegram.ext import ApplicationBuilder
+from telegram.ext import ApplicationBuilder, CommandHandler
 
 import qntq_attendance
-import heartbeat
 import planner
 
 load_dotenv(override=True)
@@ -15,7 +14,7 @@ THREAD_ID = os.getenv('TELEGRAM_THREAD_ID')
 app = ApplicationBuilder().token(TOKEN).build()
 
 qntq_attendance.register(app, app.bot, CHAT_ID, THREAD_ID)
-heartbeat.register(app)
 planner.register(app)
+app.add_handler(CommandHandler("heartbeat", lambda u, c: u.message.reply_text("I am up1!")))
 
 app.run_polling()

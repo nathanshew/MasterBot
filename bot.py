@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder
 
 from sheets.checker import Checker
-from commands import query
+from commands import query, heartbeat
 from jobs import attendance_check
 
 load_dotenv(override=True)
@@ -16,6 +16,7 @@ app = ApplicationBuilder().token(TOKEN).build()
 checker = Checker(app.bot, CHAT_ID, THREAD_ID)
 
 query.register(app, checker)
+heartbeat.register(app)
 attendance_check.register(app, checker)
 
 app.run_polling()

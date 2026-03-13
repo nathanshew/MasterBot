@@ -1,1 +1,8 @@
-{"defaultMode": "bypassPermissions"}
+{
+  "defaultMode": "bypassPermissions",
+  "permissions": {
+    "allow": [
+      "Bash(py -m pyflakes .)"
+    ]
+  }
+}

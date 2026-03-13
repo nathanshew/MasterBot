@@ -1,4 +1,3 @@
-import os
 from datetime import datetime
 from googleapiclient.discovery import build
 from sheets.auth import get_credentials

@@ -37,7 +37,7 @@ def run_polling():
 # ── Railway / Cloud Run Flask mode ───────────────────────────────────────────
 
 def run_flask():
-    from flask import Flask, jsonify, request as flask_request
+    from flask import Flask, jsonify
     from apscheduler.schedulers.background import BackgroundScheduler
     from apscheduler.triggers.cron import CronTrigger
     import pytz

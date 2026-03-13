@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from sheets.client import _parse_date
+from .client import _parse_date
 
 
 # ── Section builders ──────────────────────────────────────────────────────────

@@ -2,9 +2,9 @@ import os
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder
 
-from sheets.checker import Checker
-from commands import query, heartbeat
-from jobs import attendance_check
+import qntq_attendance
+import heartbeat
+import planner
 
 load_dotenv(override=True)
 
@@ -13,10 +13,9 @@ CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 THREAD_ID = os.getenv('TELEGRAM_THREAD_ID')
 
 app = ApplicationBuilder().token(TOKEN).build()
-checker = Checker(app.bot, CHAT_ID, THREAD_ID)
 
-query.register(app, checker)
+qntq_attendance.register(app, app.bot, CHAT_ID, THREAD_ID)
 heartbeat.register(app)
-attendance_check.register(app, checker)
+planner.register(app)
 
 app.run_polling()

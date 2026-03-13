@@ -1,6 +1,6 @@
 from datetime import datetime
 from googleapiclient.discovery import build
-from sheets.auth import get_credentials
+from .auth import get_credentials
 
 DATE_FORMATS = ['%d %b', '%d %b %Y', '%m/%d/%Y', '%d/%m/%Y', '%m/%d/%y', '%d/%m/%y', '%Y-%m-%d']
 

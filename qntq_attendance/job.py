@@ -1,5 +1,5 @@
 from datetime import time
-from jobs.base import BaseJob
+from base_job import BaseJob
 
 
 class AttendanceCheckJob(BaseJob):

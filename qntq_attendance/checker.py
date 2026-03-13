@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
-from sheets.client import get_rows, _parse_date
-from sheets import formatter
+from .client import get_rows, _parse_date
+from . import formatter
 
 
 class Checker:
@@ -34,8 +34,6 @@ class Checker:
     # ── Helpers ───────────────────────────────────────────────────────────────
 
     def _get_columns(self, data, force=False):
-        """Return (col_indices, counts) for the latest 3 past session dates.
-        Returns ([], {}) if today isn't a session day (unless force=True)."""
         date_row = data[4] if len(data) > 4 else []
         today = datetime.now().date()
 
@@ -58,7 +56,6 @@ class Checker:
         return col_indices, counts
 
     def _find_absent(self, data, col_indices, db):
-        """Members blank in all 3 columns, not on ignore list."""
         absent = []
         for row in data[5:]:
             name = row[1].strip() if len(row) > 1 else ''
@@ -70,7 +67,6 @@ class Checker:
         return absent
 
     def _find_special_care(self, data, col_indices, db, absent):
-        """Special care members with at least one attendance, or on the ignore list."""
         special_care = []
         for row in data[5:]:
             name = row[1].strip() if len(row) > 1 else ''

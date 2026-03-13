@@ -10,8 +10,8 @@ class BaseJob(ABC):
         pass
 
     async def send(self, context):
-        chat_id = os.getenv("CHAT_ID")
-        thread_id = os.getenv("THREAD_ID")
+        chat_id = os.getenv("TELEGRAM_CHAT_ID")
+        thread_id = os.getenv("TELEGRAM_THREAD_ID")
         await context.bot.send_message(
             chat_id=chat_id,
             text=self.text,

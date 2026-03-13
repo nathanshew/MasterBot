@@ -14,11 +14,12 @@ load_dotenv(override=True)
 
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+THREAD_ID = os.getenv('TELEGRAM_THREAD_ID')
 
 
 def build_app():
     app = ApplicationBuilder().token(TOKEN).build()
-    checker = Checker(app.bot, CHAT_ID)
+    checker = Checker(app.bot, CHAT_ID, THREAD_ID)
 
     hi.register(app)
     query.register(app, checker)
@@ -46,7 +47,7 @@ def run_flask():
     port = int(os.getenv('PORT', 8080))
 
     app = ApplicationBuilder().token(TOKEN).build()
-    checker = Checker(app.bot, CHAT_ID)
+    checker = Checker(app.bot, CHAT_ID, THREAD_ID)
 
     def run_check():
         loop = asyncio.new_event_loop()

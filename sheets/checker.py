@@ -5,9 +5,10 @@ from sheets import formatter
 
 
 class Checker:
-    def __init__(self, bot, chat_id):
+    def __init__(self, bot, chat_id, thread_id=None):
         self.bot = bot
         self.chat_id = chat_id
+        self.thread_id = thread_id
 
     async def run(self):
         data = get_rows(os.getenv('ATTENDANCE_SHEET_ID'), os.getenv('ATTENDANCE_SHEET_NAME'))
@@ -23,7 +24,12 @@ class Checker:
         absent = [m for m in absent if m not in {n for n, _ in special_care}]
 
         msg = self._build_message(col_indices, counts, absent, special_care, db)
-        await self.bot.send_message(chat_id=self.chat_id, text=msg, parse_mode='Markdown')
+        await self.bot.send_message(
+            chat_id=self.chat_id,
+            text=msg,
+            parse_mode='Markdown',
+            **({"message_thread_id": self.thread_id} if self.thread_id else {})
+        )
 
     # ── Helpers ───────────────────────────────────────────────────────────────
 

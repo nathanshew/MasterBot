@@ -34,7 +34,8 @@ class Checker:
     # ── Helpers ───────────────────────────────────────────────────────────────
 
     def _get_columns(self, data, force=False):
-        """Return (col_indices, counts) for the latest 3 past session dates, or ([], {}) if today isn't a session day."""
+        """Return (col_indices, counts) for the latest 3 past session dates.
+        Returns ([], {}) if today isn't a session day (unless force=True)."""
         date_row = data[4] if len(data) > 4 else []
         today = datetime.now().date()
 

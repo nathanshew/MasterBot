@@ -4,10 +4,26 @@ from .utils import fmt
 WORK_TOTAL = 22 * 60 - (8 * 60 + 30)  # 8:30am–10:00pm = 810 min
 PRIORITY_ORDER = {'high': 0, 'mid': 1, 'low': 2}
 PRIORITY_EMOJI = {'high': '🔴', 'mid': '🟡', 'low': '🟢'}
+FAR_FUTURE = date(9999, 12, 31)
 
 
 def _event_minutes(e):
     return (e['end_time'].hour * 60 + e['end_time'].minute) - (e['start_time'].hour * 60 + e['start_time'].minute)
+
+
+def _due_sort_key(t):
+    due = t['due_date'] or FAR_FUTURE
+    return (due, PRIORITY_ORDER[t['priority']], t['created_at'])
+
+
+def _due_label(due_date, today):
+    if not due_date:
+        return ''
+    if due_date < today:
+        return f' 🚨{due_date.strftime("%d/%m")}'
+    if due_date == today:
+        return ' ⚠️today'
+    return f' {due_date.strftime("%d/%m")}'
 
 
 def build(tasks, events):
@@ -17,7 +33,7 @@ def build(tasks, events):
 
     pending = sorted(
         [t for t in tasks if not t['done'] and (t['estimated_minutes'] - t['logged_minutes']) > 0],
-        key=lambda t: (PRIORITY_ORDER[t['priority']], t['created_at'])
+        key=_due_sort_key
     )
 
     scheduled, unscheduled, budget = [], [], available
@@ -34,6 +50,7 @@ def build(tasks, events):
 
 
 def format(result):
+    today = date.today()
     lines = [f"📅 *{datetime.now().strftime('%A, %d %b')}*", f"⏰ 8:30am–10:00pm · {fmt(result['available'])} available\n"]
 
     if result['events']:
@@ -47,7 +64,8 @@ def format(result):
         for i, t in enumerate(result['scheduled'], 1):
             time_str = f"{fmt(t['slot'])} of {fmt(t['remaining'])}" if t['slot'] < t['remaining'] else fmt(t['slot'])
             logged = f" · {fmt(t['logged_minutes'])} logged" if t['logged_minutes'] > 0 else ''
-            lines.append(f"  {i}. {PRIORITY_EMOJI[t['priority']]} #{t['id']} {t['title']} — {time_str}{logged}")
+            due = _due_label(t['due_date'], today)
+            lines.append(f"  {i}. {PRIORITY_EMOJI[t['priority']]} #{t['id']} {t['title']} — {time_str}{logged}{due}")
         if result['leftover'] > 0:
             lines.append(f"\n⏳ {fmt(result['leftover'])} spare")
     else:
@@ -56,6 +74,7 @@ def format(result):
     if result['unscheduled']:
         lines.append("\n⏭ *Didn't fit today:*")
         for t in result['unscheduled']:
-            lines.append(f"  • {PRIORITY_EMOJI[t['priority']]} #{t['id']} {t['title']} ({fmt(t['estimated_minutes'] - t['logged_minutes'])})")
+            due = _due_label(t['due_date'], today)
+            lines.append(f"  • {PRIORITY_EMOJI[t['priority']]} #{t['id']} {t['title']} ({fmt(t['estimated_minutes'] - t['logged_minutes'])}){due}")
 
     return '\n'.join(lines)

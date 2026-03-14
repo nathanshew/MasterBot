@@ -1,5 +1,5 @@
 from .connection import cursor
-from .tasks import add as add_task, get_pending, update as update_task, log as log_task, delete as delete_task
+from .tasks import add as add_task, get_pending, update as update_task, log as log_task, delete as delete_task, delete_many as delete_tasks
 from .events import add as add_event, get_upcoming, update as update_event, delete as delete_event
 
 
@@ -15,6 +15,7 @@ def init():
                 done BOOLEAN NOT NULL DEFAULT FALSE,
                 created_at TIMESTAMPTZ DEFAULT NOW()
             );
+            ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date DATE;
             CREATE TABLE IF NOT EXISTS events (
                 id SERIAL PRIMARY KEY,
                 title TEXT NOT NULL,

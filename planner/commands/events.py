@@ -34,9 +34,8 @@ async def cmd_events(update, context):
         return
     lines = ["📅 *Upcoming events:*\n"]
     for e in events:
-        lines.append(
-            f"#{e['id']} {e['date'].strftime('%d %b')} {e['start_time'].strftime('%H:%M')}–{e['end_time'].strftime('%H:%M')} — {e['title']}"
-        )
+        t = f"{e['start_time'].strftime('%H:%M')}–{e['end_time'].strftime('%H:%M')}"
+        lines.append(f"#{e['id']} {e['date'].strftime('%d %b')} {t} — {e['title']}")
     await update.message.reply_text('\n'.join(lines), parse_mode='Markdown')
 
 

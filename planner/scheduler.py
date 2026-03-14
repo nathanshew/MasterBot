@@ -46,12 +46,18 @@ def build(tasks, events):
             scheduled.append({**task, 'slot': slot, 'remaining': remaining})
             budget -= slot
 
-    return {'events': today_events, 'scheduled': scheduled, 'unscheduled': unscheduled, 'available': available, 'leftover': budget}
+    return {
+        'events': today_events, 'scheduled': scheduled, 'unscheduled': unscheduled,
+        'available': available, 'leftover': budget,
+    }
 
 
 def format(result):
     today = date.today()
-    lines = [f"📅 *{datetime.now().strftime('%A, %d %b')}*", f"⏰ 8:30am–10:00pm · {fmt(result['available'])} available\n"]
+    lines = [
+        f"📅 *{datetime.now().strftime('%A, %d %b')}*",
+        f"⏰ 8:30am–10:00pm · {fmt(result['available'])} available\n",
+    ]
 
     if result['events']:
         lines.append("📌 *Events:*")
@@ -75,6 +81,7 @@ def format(result):
         lines.append("\n⏭ *Didn't fit today:*")
         for t in result['unscheduled']:
             due = _due_label(t['due_date'], today)
-            lines.append(f"  • {PRIORITY_EMOJI[t['priority']]} #{t['id']} {t['title']} ({fmt(t['estimated_minutes'] - t['logged_minutes'])}){due}")
+            remaining = fmt(t['estimated_minutes'] - t['logged_minutes'])
+            lines.append(f"  • {PRIORITY_EMOJI[t['priority']]} #{t['id']} {t['title']} ({remaining}){due}")
 
     return '\n'.join(lines)

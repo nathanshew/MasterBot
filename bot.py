@@ -15,6 +15,8 @@ app = ApplicationBuilder().token(TOKEN).build()
 
 qntq_attendance.register(app, app.bot, CHAT_ID, THREAD_ID)
 planner.register(app, CHAT_ID)
-app.add_handler(CommandHandler("heartbeat", lambda u, c: u.message.reply_text("I am up!"), filters=filters.Chat(chat_id=CHAT_ID)))
+app.add_handler(CommandHandler(
+    "heartbeat", lambda u, c: u.message.reply_text("I am up!"), filters=filters.Chat(chat_id=CHAT_ID)
+))
 
 app.run_polling()

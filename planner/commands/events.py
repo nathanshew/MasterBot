@@ -8,7 +8,9 @@ async def cmd_addevent(update, context):
     # /addevent <title> <date> <start> <end>
     args = context.args
     if len(args) < 4:
-        await update.message.reply_text("Usage: /addevent <title> <date> <start> <end>\nExample: /addevent Standup 13/03 10:00 11:00")
+        await update.message.reply_text(
+            "Usage: /addevent <title> <date> <start> <end>\nExample: /addevent Standup 13/03 10:00 11:00"
+        )
         return
     try:
         end_time = parse_time(args[-1])
@@ -32,7 +34,9 @@ async def cmd_events(update, context):
         return
     lines = ["📅 *Upcoming events:*\n"]
     for e in events:
-        lines.append(f"#{e['id']} {e['date'].strftime('%d %b')} {e['start_time'].strftime('%H:%M')}–{e['end_time'].strftime('%H:%M')} — {e['title']}")
+        lines.append(
+            f"#{e['id']} {e['date'].strftime('%d %b')} {e['start_time'].strftime('%H:%M')}–{e['end_time'].strftime('%H:%M')} — {e['title']}"
+        )
     await update.message.reply_text('\n'.join(lines), parse_mode='Markdown')
 
 

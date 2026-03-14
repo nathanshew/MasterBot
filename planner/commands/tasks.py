@@ -51,16 +51,20 @@ async def cmd_addtask(update, context):
         return
     task = add_task(title, priority, minutes, due_date)
     due = _due_label(task['due_date'])
-    await update.message.reply_text(f"✅ Task #{task['id']} added: {title} ({fmt(minutes)}, {PRIORITY_LABELS[priority]}{due})")
+    await update.message.reply_text(
+        f"✅ Task #{task['id']} added: {title} ({fmt(minutes)}, {PRIORITY_LABELS[priority]}{due})"
+    )
 
 
 async def cmd_addtasks(update, context):
     # /addtasks
     # One task per line: <title> <time> <priority> [date]
     lines = update.message.text.split('\n')[1:]
-    lines = [l.strip() for l in lines if l.strip()]
+    lines = [ln.strip() for ln in lines if ln.strip()]
     if not lines:
-        await update.message.reply_text("Usage: /addtasks\n<title> <time> <priority> [date]\n<title> <time> <priority> [date]\n...")
+        await update.message.reply_text(
+            "Usage: /addtasks\n<title> <time> <priority> [date]\n<title> <time> <priority> [date]\n..."
+        )
         return
     results = []
     for line in lines:
@@ -137,7 +141,8 @@ async def cmd_deltasks(update, context):
         await update.message.reply_text("IDs must be integers.")
         return
     deleted = delete_tasks(ids)
-    await update.message.reply_text(f"🗑 Deleted {len(deleted)}: {', '.join(f'#{i}' for i in deleted)}" if deleted else "No tasks found.")
+    msg = f"🗑 Deleted {len(deleted)}: {', '.join(f'#{i}' for i in deleted)}" if deleted else "No tasks found."
+    await update.message.reply_text(msg)
 
 
 async def cmd_edittask(update, context):

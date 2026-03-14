@@ -1,6 +1,6 @@
 from .connection import cursor
-from .tasks import add as add_task, get_pending, update as update_task, log as log_task, delete as delete_task, delete_many as delete_tasks
-from .events import add as add_event, get_upcoming, update as update_event, delete as delete_event
+from .tasks import add as add_task, get_pending, update as update_task, log as log_task, delete as delete_task, delete_many as delete_tasks  # noqa: F401
+from .events import add as add_event, get_upcoming, update as update_event, delete as delete_event  # noqa: F401
 
 
 def init():

@@ -1,4 +1,4 @@
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, filters
 from ..db import add_task, get_pending, update_task, log_task, delete_task
 from ..utils import fmt, parse_duration
 
@@ -108,10 +108,11 @@ async def cmd_edittask(update, context):
     await update.message.reply_text(f"✅ Updated #{task['id']}: {task['title']}")
 
 
-def register(app):
-    app.add_handler(CommandHandler("addtask", cmd_addtask))
-    app.add_handler(CommandHandler("tasks", cmd_tasks))
-    app.add_handler(CommandHandler("done", cmd_done))
-    app.add_handler(CommandHandler("log", cmd_log))
-    app.add_handler(CommandHandler("deltask", cmd_deltask))
-    app.add_handler(CommandHandler("edittask", cmd_edittask))
+def register(app, chat_id):
+    f = filters.Chat(chat_id=chat_id)
+    app.add_handler(CommandHandler("addtask", cmd_addtask, filters=f))
+    app.add_handler(CommandHandler("tasks", cmd_tasks, filters=f))
+    app.add_handler(CommandHandler("done", cmd_done, filters=f))
+    app.add_handler(CommandHandler("log", cmd_log, filters=f))
+    app.add_handler(CommandHandler("deltask", cmd_deltask, filters=f))
+    app.add_handler(CommandHandler("edittask", cmd_edittask, filters=f))

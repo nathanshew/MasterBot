@@ -1,5 +1,5 @@
 from datetime import date
-from telegram.ext import CommandHandler
+from telegram.ext import CommandHandler, filters
 from ..db import add_event, get_upcoming, update_event, delete_event
 from ..utils import parse_date, parse_time
 
@@ -75,8 +75,9 @@ async def cmd_editevent(update, context):
     await update.message.reply_text(f"✅ Updated event #{event['id']}: {event['title']}")
 
 
-def register(app):
-    app.add_handler(CommandHandler("addevent", cmd_addevent))
-    app.add_handler(CommandHandler("events", cmd_events))
-    app.add_handler(CommandHandler("delevent", cmd_delevent))
-    app.add_handler(CommandHandler("editevent", cmd_editevent))
+def register(app, chat_id):
+    f = filters.Chat(chat_id=chat_id)
+    app.add_handler(CommandHandler("addevent", cmd_addevent, filters=f))
+    app.add_handler(CommandHandler("events", cmd_events, filters=f))
+    app.add_handler(CommandHandler("delevent", cmd_delevent, filters=f))
+    app.add_handler(CommandHandler("editevent", cmd_editevent, filters=f))

@@ -1,7 +1,7 @@
 from . import tasks, events, today
 
 
-def register(app):
-    tasks.register(app)
-    events.register(app)
-    today.register(app)
+def register(app, chat_id):
+    tasks.register(app, chat_id)
+    events.register(app, chat_id)
+    today.register(app, chat_id)

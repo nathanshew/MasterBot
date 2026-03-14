@@ -2,6 +2,6 @@ from .db import init
 from .commands import register as _register
 
 
-def register(app):
+def register(app, chat_id):
     init()
-    _register(app)
+    _register(app, chat_id)

@@ -37,6 +37,7 @@ HELP = """📋 *Commands*
 
 *Recurring*
 /addrecurring `<title> <day> <start> <end>`
+/addrecurrings — bulk add, one per line
 /recurring — list recurring activities
 /skiprecurring `<id> [date]` — skip once (default: today)
 /delrecurring `<id>`

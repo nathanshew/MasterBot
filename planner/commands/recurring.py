@@ -31,6 +31,38 @@ async def cmd_addrecurring(update, context):
     )
 
 
+async def cmd_addrecurrings(update, context):
+    # /addrecurrings
+    # One per line: <title> <day> <start> <end>
+    lines = update.message.text.split('\n')[1:]
+    lines = [line.strip() for line in lines if line.strip()]
+    if not lines:
+        await update.message.reply_text(
+            "Usage: /addrecurrings\n<title> <day> <start> <end>\n<title> <day> <start> <end>\n..."
+        )
+        return
+    results = []
+    for line in lines:
+        args = line.split()
+        if len(args) < 4:
+            results.append(f"❌ {line!r} — need: <title> <day> <start> <end>")
+            continue
+        try:
+            end_time = parse_time(args[-1])
+            start_time = parse_time(args[-2])
+            day = parse_day(args[-3])
+        except ValueError as e:
+            results.append(f"❌ {line!r} — {e}")
+            continue
+        title = ' '.join(args[:-3])
+        r = add_recurring(title, day, start_time, end_time)
+        results.append(
+            f"✅ #{r['id']} {title} every {DAY_NAMES[day]} "
+            f"{start_time.strftime('%H:%M')}–{end_time.strftime('%H:%M')}"
+        )
+    await update.message.reply_text('\n'.join(results))
+
+
 async def cmd_recurring(update, context):
     rows = get_all_recurring()
     if not rows:
@@ -69,6 +101,7 @@ async def cmd_skiprecurring(update, context):
 def register(app, chat_id):
     f = filters.Chat(chat_id=chat_id)
     app.add_handler(CommandHandler("addrecurring", cmd_addrecurring, filters=f))
+    app.add_handler(CommandHandler("addrecurrings", cmd_addrecurrings, filters=f))
     app.add_handler(CommandHandler("recurring", cmd_recurring, filters=f))
     app.add_handler(CommandHandler("delrecurring", cmd_delrecurring, filters=f))
     app.add_handler(CommandHandler("skiprecurring", cmd_skiprecurring, filters=f))

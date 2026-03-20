@@ -1,7 +1,8 @@
+from datetime import date
 from telegram.ext import CommandHandler, filters
-from ..db import add_recurring, get_all_recurring, delete_recurring
+from ..db import add_recurring, get_all_recurring, delete_recurring, skip_recurring
 from ..db.recurring import parse_day
-from ..utils import parse_time
+from ..utils import parse_time, parse_date
 
 DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -50,8 +51,24 @@ async def cmd_delrecurring(update, context):
     await update.message.reply_text("🗑 Deleted." if deleted else "Not found.")
 
 
+async def cmd_skiprecurring(update, context):
+    # /skiprecurring <id> [date]  — skip for today or a specific date
+    if not context.args:
+        await update.message.reply_text("Usage: /skiprecurring <id> [date]\nExample: /skiprecurring 2 21/03")
+        return
+    try:
+        recurring_id = int(context.args[0])
+        skip_date = parse_date(context.args[1]) if len(context.args) > 1 else date.today()
+    except ValueError as e:
+        await update.message.reply_text(str(e))
+        return
+    skip_recurring(recurring_id, skip_date)
+    await update.message.reply_text(f"⏭ Skipped #{recurring_id} for {skip_date.strftime('%d %b')}.")
+
+
 def register(app, chat_id):
     f = filters.Chat(chat_id=chat_id)
     app.add_handler(CommandHandler("addrecurring", cmd_addrecurring, filters=f))
     app.add_handler(CommandHandler("recurring", cmd_recurring, filters=f))
     app.add_handler(CommandHandler("delrecurring", cmd_delrecurring, filters=f))
+    app.add_handler(CommandHandler("skiprecurring", cmd_skiprecurring, filters=f))

@@ -25,6 +25,25 @@ def add(title, day_of_week, start_time, end_time):
         return cur.fetchone()
 
 
+def get_for_date(d):
+    with cursor() as cur:
+        cur.execute(
+            "SELECT * FROM recurring_events WHERE day_of_week = %s"
+            " AND id NOT IN (SELECT recurring_id FROM recurring_skips WHERE skip_date = %s)"
+            " ORDER BY start_time",
+            (d.weekday(), d)
+        )
+        return cur.fetchall()
+
+
+def add_skip(recurring_id, skip_date):
+    with cursor() as cur:
+        cur.execute(
+            "INSERT INTO recurring_skips (recurring_id, skip_date) VALUES (%s, %s) ON CONFLICT DO NOTHING",
+            (recurring_id, skip_date)
+        )
+
+
 def get_for_day(day_of_week):
     with cursor() as cur:
         cur.execute(

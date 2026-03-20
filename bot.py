@@ -35,6 +35,11 @@ HELP = """📋 *Commands*
 /editevent `<id> <field> <value>`
 /delevent `<id>`
 
+*Recurring*
+/addrecurring `<title> <day> <start> <end>`
+/recurring — list recurring activities
+/delrecurring `<id>`
+
 *Attendance*
 /queryOpenJio — manually trigger attendance check
 

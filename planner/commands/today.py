@@ -1,13 +1,17 @@
 from datetime import date
 from telegram.ext import CommandHandler, filters
-from ..db import get_pending, get_upcoming
+from ..db import get_pending, get_upcoming, get_recurring_for_day
 from .. import scheduler
 
 
 async def cmd_today(update, context):
+    today = date.today()
     tasks = get_pending()
-    events = get_upcoming(from_date=date.today())
-    result = scheduler.build(tasks, events)
+    events = get_upcoming(from_date=today)
+    recurring = [
+        {**r, 'date': today} for r in get_recurring_for_day(today.weekday())
+    ]
+    result = scheduler.build(tasks, events + recurring)
     await update.message.reply_text(scheduler.format(result), parse_mode='Markdown')
 
 

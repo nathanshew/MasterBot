@@ -1,8 +1,9 @@
 {
-  "defaultMode": "bypassPermissions",
   "permissions": {
     "allow": [
-      "Bash(py -m pyflakes .)"
+      "Bash(py -m pyflakes .)",
+      "Bash(flake8 . --max-line-length=120 --exclude=.venv)"
     ]
-  }
+  },
+  "defaultMode": "bypassPermissions"
 }

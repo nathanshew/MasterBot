@@ -15,8 +15,36 @@ app = ApplicationBuilder().token(TOKEN).build()
 
 qntq_attendance.register(app, app.bot, CHAT_ID, THREAD_ID)
 planner.register(app, CHAT_ID)
+HELP = """📋 *Commands*
+
+*Planner*
+/addtask `<title> <time> <priority> [date]`
+/addtasks — bulk add, one task per line
+/tasks — list pending tasks
+/done `<id>` — mark task complete
+/log `<id> <time>` — log time on a task
+/deltask `<id>` — delete a task
+/deltasks `<id1> <id2> ...` — bulk delete
+/edittask `<id> <field> <value>` — edit title/priority/time/due
+/duetasks `<date> <id1> <id2> ...` — bulk set due date
+/today — today's schedule
+
+*Events*
+/addevent `<title> <date> <start> <end>`
+/events — list upcoming events
+/editevent `<id> <field> <value>`
+/delevent `<id>`
+
+*Other*
+/heartbeat — check bot is alive
+/help — this message"""
+
 app.add_handler(CommandHandler(
     "heartbeat", lambda u, c: u.message.reply_text("I am up!"), filters=filters.Chat(chat_id=CHAT_ID)
+))
+app.add_handler(CommandHandler(
+    "help", lambda u, c: u.message.reply_text(HELP, parse_mode='Markdown'),
+    filters=filters.Chat(chat_id=CHAT_ID)
 ))
 
 app.run_polling()

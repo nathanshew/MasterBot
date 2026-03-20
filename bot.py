@@ -41,6 +41,7 @@ HELP = """📋 *Commands*
 /recurring — list recurring activities
 /skiprecurring `<id> [date]` — skip once (default: today)
 /delrecurring `<id>`
+/clearrecurrings — delete all recurring activities
 
 *Attendance*
 /queryOpenJio — manually trigger attendance check

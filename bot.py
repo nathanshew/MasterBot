@@ -35,6 +35,9 @@ HELP = """📋 *Commands*
 /editevent `<id> <field> <value>`
 /delevent `<id>`
 
+*Attendance*
+/queryOpenJio — manually trigger attendance check
+
 *Other*
 /heartbeat — check bot is alive
 /help — this message"""

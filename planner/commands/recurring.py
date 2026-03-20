@@ -1,6 +1,6 @@
 from datetime import date
 from telegram.ext import CommandHandler, filters
-from ..db import add_recurring, get_all_recurring, delete_recurring, skip_recurring
+from ..db import add_recurring, get_all_recurring, delete_recurring, delete_all_recurring, skip_recurring
 from ..db.recurring import parse_day
 from ..utils import parse_time, parse_date
 
@@ -75,6 +75,11 @@ async def cmd_recurring(update, context):
     await update.message.reply_text('\n'.join(lines), parse_mode='Markdown')
 
 
+async def cmd_clearrecurrings(update, context):
+    count = delete_all_recurring()
+    await update.message.reply_text(f"🗑 Cleared {count} recurring activities.")
+
+
 async def cmd_delrecurring(update, context):
     if not context.args:
         await update.message.reply_text("Usage: /delrecurring <id>")
@@ -103,5 +108,6 @@ def register(app, chat_id):
     app.add_handler(CommandHandler("addrecurring", cmd_addrecurring, filters=f))
     app.add_handler(CommandHandler("addrecurrings", cmd_addrecurrings, filters=f))
     app.add_handler(CommandHandler("recurring", cmd_recurring, filters=f))
+    app.add_handler(CommandHandler("clearrecurrings", cmd_clearrecurrings, filters=f))
     app.add_handler(CommandHandler("delrecurring", cmd_delrecurring, filters=f))
     app.add_handler(CommandHandler("skiprecurring", cmd_skiprecurring, filters=f))

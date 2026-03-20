@@ -6,7 +6,8 @@ from .tasks import (  # noqa: F401
 from .events import add as add_event, get_upcoming, update as update_event, delete as delete_event  # noqa: F401
 from .recurring import (  # noqa: F401
     add as add_recurring, get_for_date as get_recurring_for_date,
-    get_all as get_all_recurring, delete as delete_recurring, add_skip as skip_recurring
+    get_all as get_all_recurring, delete as delete_recurring,
+    delete_all as delete_all_recurring, add_skip as skip_recurring
 )
 
 

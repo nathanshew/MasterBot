@@ -63,3 +63,9 @@ def delete(recurring_id):
     with cursor() as cur:
         cur.execute("DELETE FROM recurring_events WHERE id = %s", (recurring_id,))
         return cur.rowcount > 0
+
+
+def delete_all():
+    with cursor() as cur:
+        cur.execute("DELETE FROM recurring_events")
+        return cur.rowcount
